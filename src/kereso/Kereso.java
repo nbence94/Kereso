@@ -54,20 +54,19 @@ public class Kereso {
     } 
     
     
-    public void Keres(String[][] places, String searchThis){
+      public String Keres(String[][] places, String searchThis){
+        String Matched = "";
         for(int i = 0; i < tombLength; i++) {
             if(places[i][0].toLowerCase().equals(searchThis.toLowerCase())){
-                System.out.println("> " + places[i][0]);
-                System.out.println("- Zóna: " + places[i][1]);
-                System.out.println("- Épület: " + places[i][2]);
-                System.out.println("Egyéb információ: \n" + places[i][3]);
+                return "> " + places[i][0] + "\n- Épület: " + places[i][1] + "\n- Zóna: " + places[i][2] + 
+                     "\nEgyéb információ: \n" + places[i][3] + "\n";
             }
             else if(places[i][0].toLowerCase().contains(searchThis.toLowerCase())){
-                System.out.println("> " + places[i][0]);
+                Matched += "> " + places[i][0] + "\n";
             }
         }
-    }
-      
+        return (!Matched.equals(""))? Matched : "Nincs találat";
+    }      
     
     
     
