@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static jdk.nashorn.internal.objects.NativeArray.map;
+
 /**
  * @author BenZe
  */
@@ -24,8 +24,7 @@ public class Kereso {
     public Kereso(String filePath) throws Exception{
         this.path = filePath;
         Lines();      
-    }
-    
+    }   
     
     public final void Lines() throws IOException{
         FileReader fr = new FileReader(path);
@@ -53,36 +52,52 @@ public class Kereso {
         return Datas;
     }
     
-    public String searchTheOne(String searchThis) throws IOException{ 
+    public boolean searchTheOne(String searchThis) throws IOException{ 
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr); 
         for(int i = 0; i < tombLength; i++){
             String[] sor = br.readLine().split("\\|");
             if(sor[0].toLowerCase().equals(searchThis.toLowerCase())){
-                return "> " + sor[0] + "\n- Épület: " + sor[1] + "\n- Zóna: " + sor[2] + 
-                     "\nEgyéb információ: \n" + sor[3] + "\n";       
+                this.Company  = sor[0];
+                this.Building = sor[1];
+                this.Zone = sor[2];
+                this.Information = sor[3];
+                return true;     
             }
         }
         br.close();
-        return "-";
+        return false;
     }  
     
-     public String searchOthers(String searchThis) throws IOException{ 
-        String Matched = "";
+    public String getCompany(){
+        return this.Company;
+    }
+    public String getBuilding(){
+        return Building;
+    }    
+    public String getZone(){
+        return Zone;
+    }   
+    public String getInformation(){
+        return Information;
+    }  
+    
+     public List<String> searchOthers(String searchThis) throws IOException{         
+        List<String> matches = new ArrayList<>();
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr); 
         for(int i = 0; i < tombLength; i++){
             String[] sor = br.readLine().split("\\|");
             if(sor[0].toLowerCase().contains(searchThis.toLowerCase())){
-                Matched += "> " + sor[0] + "\n";
+                matches.add(sor[0]);
             } 
         }
         br.close();
-        return (!Matched.equals(""))? Matched : "-";
+        return matches;
     }    
     
     
-    //TODO: Javítani
+    //TODO: Javítani - Erre átszabni
     public Map<Integer, List<String>> loadPlaces() throws IOException {
         Map<Integer, List<String>> places = new HashMap<>();
         List<String> datas = new ArrayList<>();
@@ -116,19 +131,7 @@ public class Kereso {
         }
         return (!Matched.equals(""))? Matched : "Nincs találat";
     }      
-    
-    public void Beszur(String[][] Places, String newCompany, String newBuilding, String newZone, String newInfo){
-        String ncFirstChar = String.valueOf(newCompany.toLowerCase().charAt(0));
-        String thisWord;
-        for(int i = 0; i < tombLength; i++){
-            thisWord = Places[i][0].toLowerCase();
-            if(String.valueOf(thisWord.charAt(0)).equals(ncFirstChar)){
-                for(int y = 0; y < thisWord.length(); y++){
-                    
-                }
-            }
-        }
-    }
+
     
     
 }
