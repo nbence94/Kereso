@@ -1,14 +1,20 @@
 package kereso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author BenZe
  */
 public class Cegkereso extends javax.swing.JFrame {
 
+    String filePath = "E:/places.bqf";
+    
     public Cegkereso() {
         initComponents();
-        
+        otherMatches.setListData(new String[0]);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -24,7 +30,12 @@ public class Cegkereso extends javax.swing.JFrame {
         keresBtn = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         otherMatches = new javax.swing.JList<>();
-        matchLabel = new javax.swing.JLabel();
+        label1 = new javax.swing.JLabel();
+        foundCompany = new javax.swing.JLabel();
+        label2 = new javax.swing.JLabel();
+        foundBuilding = new javax.swing.JLabel();
+        label3 = new javax.swing.JLabel();
+        foundZone = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -40,9 +51,30 @@ public class Cegkereso extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        otherMatches.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                otherMatchesValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(otherMatches);
 
-        matchLabel.setText("jLabel1");
+        label1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        label1.setText("Cég:");
+
+        foundCompany.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        foundCompany.setText("-");
+
+        label2.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        label2.setText("Épület:");
+
+        foundBuilding.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        foundBuilding.setText("-");
+
+        label3.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        label3.setText("Zóna:");
+
+        foundZone.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        foundZone.setText("-");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -52,11 +84,24 @@ public class Cegkereso extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(keresTf, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(label2)
+                                .addGap(18, 18, 18)
+                                .addComponent(foundBuilding))
+                            .addComponent(keresTf, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(keresBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                        .addComponent(keresBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(matchLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(label1)
+                                .addGap(18, 18, 18)
+                                .addComponent(foundCompany))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(label3)
+                                .addGap(18, 18, 18)
+                                .addComponent(foundZone)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -72,8 +117,18 @@ public class Cegkereso extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(keresTf)
                             .addComponent(keresBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
-                        .addGap(41, 41, 41)
-                        .addComponent(matchLabel)
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(label1)
+                            .addComponent(foundCompany))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(label2)
+                            .addComponent(foundBuilding))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(label3)
+                            .addComponent(foundZone))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -83,9 +138,15 @@ public class Cegkereso extends javax.swing.JFrame {
 
     private void keresBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keresBtnActionPerformed
         try{
-            Kereso search = new Kereso("E:/places.bqf");
-            if(!search.searchTheOne(keresTf.getText()).equals("-")){
-                matchLabel.setText(search.searchTheOne(keresTf.getText()));
+            Kereso search = new Kereso(filePath);
+            if(search.searchTheOne(keresTf.getText())){
+                foundCompany.setText(search.getCompany());
+                foundBuilding.setText(search.getBuilding());
+                foundZone.setText(search.getZone());               
+            }
+            else {
+                String[] elements = search.searchOthers(keresTf.getText()).toArray(new String[0]);               
+                otherMatches.setListData(elements);
             }
         }
         catch (Exception ex){
@@ -93,6 +154,10 @@ public class Cegkereso extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_keresBtnActionPerformed
+
+    private void otherMatchesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_otherMatchesValueChanged
+        foundCompany.setText(otherMatches.getSelectedValue());
+    }//GEN-LAST:event_otherMatchesValueChanged
 
     /**
      * @param args the command line arguments
@@ -130,10 +195,15 @@ public class Cegkereso extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel foundBuilding;
+    private javax.swing.JLabel foundCompany;
+    private javax.swing.JLabel foundZone;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToggleButton keresBtn;
     private javax.swing.JTextField keresTf;
-    private javax.swing.JLabel matchLabel;
+    private javax.swing.JLabel label1;
+    private javax.swing.JLabel label2;
+    private javax.swing.JLabel label3;
     private javax.swing.JList<String> otherMatches;
     // End of variables declaration//GEN-END:variables
 }
