@@ -82,7 +82,7 @@ public class Kereso {
         return Information;
     }  
     
-     public List<String> searchOthers(String searchThis) throws IOException{         
+    public List<String> searchOthers(String searchThis) throws IOException{         
         List<String> matches = new ArrayList<>();
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr); 
@@ -96,7 +96,22 @@ public class Kereso {
         return matches;
     }    
     
-    
+    public void quickSearch(String company) throws Exception {
+        FileReader fr = new FileReader(path);
+        BufferedReader br = new BufferedReader(fr); 
+        for(int i = 0; i < tombLength; i++){
+            String[] sor = br.readLine().split("\\|");
+            if(sor[0].contains(company)){
+                this.Company  = sor[0];
+                this.Building = sor[1];
+                this.Zone = sor[2];
+                this.Information = sor[3];               
+            } 
+        }
+        br.close();       
+    }
+     
+     
     //TODO: Javítani - Erre átszabni
     public Map<Integer, List<String>> loadPlaces() throws IOException {
         Map<Integer, List<String>> places = new HashMap<>();
@@ -132,6 +147,9 @@ public class Kereso {
         return (!Matched.equals(""))? Matched : "Nincs találat";
     }      
 
-    
+    public void insertNew(String newCompany, String newBuilding, String newZone, String newInfo) throws Exception{
+        FileReader fr = new FileReader(path);
+        BufferedReader br = new BufferedReader(fr);         
+    }
     
 }
