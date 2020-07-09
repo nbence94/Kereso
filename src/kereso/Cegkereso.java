@@ -2,6 +2,7 @@ package kereso;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,6 +16,8 @@ public class Cegkereso extends javax.swing.JFrame {
         initComponents();
         otherMatches.setListData(new String[0]);
         this.setLocationRelativeTo(null);
+        this.setTitle("Bitep cégkereső");
+        
     }
 
     /**
@@ -36,6 +39,8 @@ public class Cegkereso extends javax.swing.JFrame {
         foundBuilding = new javax.swing.JLabel();
         label3 = new javax.swing.JLabel();
         foundZone = new javax.swing.JLabel();
+        label4 = new javax.swing.JLabel();
+        foundInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +66,7 @@ public class Cegkereso extends javax.swing.JFrame {
         label1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         label1.setText("Cég:");
 
-        foundCompany.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        foundCompany.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         foundCompany.setText("-");
 
         label2.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
@@ -75,6 +80,12 @@ public class Cegkereso extends javax.swing.JFrame {
 
         foundZone.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         foundZone.setText("-");
+
+        label4.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        label4.setText("Egyéb:");
+
+        foundInfo.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        foundInfo.setText("-");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,7 +112,11 @@ public class Cegkereso extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(label3)
                                 .addGap(18, 18, 18)
-                                .addComponent(foundZone)))
+                                .addComponent(foundZone))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(label4)
+                                .addGap(18, 18, 18)
+                                .addComponent(foundInfo)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -129,6 +144,10 @@ public class Cegkereso extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(label3)
                             .addComponent(foundZone))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(label4)
+                            .addComponent(foundInfo))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -145,18 +164,27 @@ public class Cegkereso extends javax.swing.JFrame {
                 foundZone.setText(search.getZone());               
             }
             else {
-                String[] elements = search.searchOthers(keresTf.getText()).toArray(new String[0]);               
+                String[] elements = search.searchOthers(keresTf.getText()).toArray(new String[0]);  
                 otherMatches.setListData(elements);
             }
         }
         catch (Exception ex){
-            
+            JOptionPane.showMessageDialog(null, "Hiba: " + ex);
         }
         
     }//GEN-LAST:event_keresBtnActionPerformed
 
     private void otherMatchesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_otherMatchesValueChanged
-        foundCompany.setText(otherMatches.getSelectedValue());
+        try{
+            Kereso search = new Kereso(filePath);
+            search.quickSearch(otherMatches.getSelectedValue());
+            foundCompany.setText(search.getCompany());
+            foundBuilding.setText(search.getBuilding());
+            foundZone.setText(search.getZone());               
+        }
+        catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Hiba: " + ex);
+        }
     }//GEN-LAST:event_otherMatchesValueChanged
 
     /**
@@ -197,6 +225,7 @@ public class Cegkereso extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel foundBuilding;
     private javax.swing.JLabel foundCompany;
+    private javax.swing.JLabel foundInfo;
     private javax.swing.JLabel foundZone;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToggleButton keresBtn;
@@ -204,6 +233,7 @@ public class Cegkereso extends javax.swing.JFrame {
     private javax.swing.JLabel label1;
     private javax.swing.JLabel label2;
     private javax.swing.JLabel label3;
+    private javax.swing.JLabel label4;
     private javax.swing.JList<String> otherMatches;
     // End of variables declaration//GEN-END:variables
 }
